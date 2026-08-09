@@ -3,8 +3,8 @@ class WhyCli < Formula
 
   desc "Track why you installed every tool on your machine"
   homepage "https://github.com/Nostoi/whydatapp"
-  url "https://files.pythonhosted.org/packages/21/12/85b45e33cd53f61bd79278fcb6c749e1c6bdb7f86dfc5f1b9181e0ef631a/why_cli-2.3.7.tar.gz"
-  sha256 "d849e94597d8390f0c656abd69df8d2d390ce2be5485decb484a75056ad31247"
+  url "https://files.pythonhosted.org/packages/11/bb/69fc7a2e6bf47c4ec0e751d9815f0669901968c996291de4ba43f5040da1/why_cli-2.3.8.tar.gz"
+  sha256 "b64e8296ea1397f71cc25bb010b0e5188155067301331fddc6d344f32cefd41e"
   license "MIT"
   head "https://github.com/Nostoi/whydatapp.git", branch: "main"
 
