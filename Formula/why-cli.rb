@@ -3,8 +3,8 @@ class WhyCli < Formula
 
   desc "Track why you installed every tool on your machine"
   homepage "https://github.com/Nostoi/whydatapp"
-  url "https://files.pythonhosted.org/packages/11/bb/69fc7a2e6bf47c4ec0e751d9815f0669901968c996291de4ba43f5040da1/why_cli-2.3.8.tar.gz"
-  sha256 "b64e8296ea1397f71cc25bb010b0e5188155067301331fddc6d344f32cefd41e"
+  url "https://files.pythonhosted.org/packages/0d/34/f53ea572f189da178ff1d4b4e8f106718f62e20c264ea5f5dacdd3a0060a/why_cli-2.3.9.tar.gz"
+  sha256 "554be289a807a822c71a9930471fa7db72934ac86d406505a81660866c21c920"
   license "MIT"
   head "https://github.com/Nostoi/whydatapp.git", branch: "main"
 
@@ -167,8 +167,8 @@ class WhyCli < Formula
     ENV["WHY_HOME"] = testpath/"why"
     assert_match "No installs", shell_output("#{bin}/why list")
 
-    # The web extra is the reason this formula vendors 24 resources; prove it
-    # imports rather than trusting the resource list.
+    # The web extra is the reason this formula vendors so many resources; prove
+    # it imports rather than trusting the resource list.
     system libexec/"bin/python", "-c", "import why.web.app, uvicorn, fastapi"
   end
 end
