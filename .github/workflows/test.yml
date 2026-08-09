@@ -1,0 +1,52 @@
+name: test formula
+
+# Nothing else validates a tap. Without this, a broken formula — a stale
+# resource, a dependency that stopped shipping an sdist, a new compiler
+# requirement — surfaces for the first time when a user runs `brew install`.
+# The weekly run exists because a formula can rot without anyone touching it.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  formula:
+    name: build from source + test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tap this checkout
+        run: |
+          set -euo pipefail
+          mkdir -p "$(brew --repository)/Library/Taps/nostoi"
+          ln -s "$GITHUB_WORKSPACE" "$(brew --repository)/Library/Taps/nostoi/homebrew-why"
+          brew tap
+
+      - name: Style and audit
+        run: |
+          brew style nostoi/why
+          brew audit --strict --online --formula nostoi/why/why-cli
+
+      # --build-from-source is the point: a tap ships no bottles, so this is
+      # exactly what a user's machine does.
+      - name: Build from source
+        run: brew install --build-from-source --verbose nostoi/why/why-cli
+
+      - name: brew test
+        run: brew test nostoi/why/why-cli
+
+      # The formula's own test block covers --version, list, and the web
+      # imports. This adds the thing a user actually does next.
+      - name: Smoke-test the installed binary
+        run: |
+          set -euo pipefail
+          export WHY_HOME="$(mktemp -d)"
+          why --version
+          why list
+          why --help > /dev/null
+          why log -- brew install ripgrep < /dev/null || true
+          echo "installed at: $(which why)"
