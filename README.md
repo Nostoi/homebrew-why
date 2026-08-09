@@ -5,11 +5,19 @@ Homebrew tap for [whydatApp](https://github.com/Nostoi/whydatapp) — track *why
 ## Install
 
 ```bash
-brew install nostoi/why/why-cli
+brew tap nostoi/why
+brew trust --tap nostoi/why
+brew install why-cli
 why init
 ```
 
-`why init` installs the shell hook and asks before changing anything. Start a new shell afterwards.
+The `brew trust` step is required by Homebrew 6 for any third-party tap — Homebrew refuses to load formulae from an untrusted tap, and it applies to every tap that isn't `homebrew/core`, not to this one specifically. You can inspect exactly what you're trusting first:
+
+```bash
+brew cat nostoi/why/why-cli
+```
+
+`why init` then installs the shell hook, asking before it changes anything. Start a new shell afterwards, or run `exec $SHELL -l`.
 
 ## Upgrade
 

@@ -12,6 +12,9 @@ on:
     - cron: "0 6 * * 1"
   workflow_dispatch:
 
+env:
+  HOMEBREW_NO_REQUIRE_TAP_TRUST: 1
+
 jobs:
   formula:
     name: build from source + test
@@ -19,7 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Homebrew 6 requires third-party taps to be trusted before use. In CI the
+      # tap IS the thing under test, so the check is noise rather than a safeguard.
       - name: Tap this checkout
+        env:
+          HOMEBREW_NO_REQUIRE_TAP_TRUST: 1
         run: |
           set -euo pipefail
           mkdir -p "$(brew --repository)/Library/Taps/nostoi"
@@ -44,7 +51,10 @@ jobs:
       - name: Smoke-test the installed binary
         run: |
           set -euo pipefail
-          export WHY_HOME="$(mktemp -d)"
+          # Declared separately from the assignment: `export X="$(cmd)"` masks
+          # cmd's exit status, and shellcheck (run by `brew style`) fails on it.
+          WHY_HOME="$(mktemp -d)"
+          export WHY_HOME
           why --version
           why list
           why --help > /dev/null
